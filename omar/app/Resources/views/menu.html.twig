@@ -1,0 +1,7 @@
+  {% if is_granted('IS_AUTHENTICATED_FULLY')%}
+       {{include('menuAdminAndUser.html.twig')}}
+  {% else %}
+
+{{include('menuVisitante.html.twig')}}
+
+{% endif %}

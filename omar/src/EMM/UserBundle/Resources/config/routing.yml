@@ -1,0 +1,31 @@
+emm_user_user:
+    resource: "@EMMUserBundle/Resources/config/routes/user.yml"
+    prefix:   /user
+
+emm_task_task:
+    resource: "@EMMUserBundle/Resources/config/routes/tasks.yml"
+    prefix:   /task
+
+
+# autenticacion
+
+
+emm_user_homepage:
+    path:    /
+    defaults: {_controller: EMMUserBundle:User:Home }
+
+emm_user_login:
+    path:    /login
+    defaults: {_controller: EMMUserBundle:Security:login }
+    
+emm_user_login_check:
+    path:    /login_check
+    defaults: {_controller: EMMUserBundle:Security:loginCheck }
+emm_user_logout:
+    path:    /logout
+
+
+
+
+
+  

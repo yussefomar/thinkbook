@@ -1,0 +1,122 @@
+{% extends "layout.html.twig" %}
+
+{% block body %}
+     {{parent()}}
+     {# Progress bar es un abrra cargadora del bootstrap, incialmente escondido con hindden si lo sacamosaparece #}
+	<div class="progress no-border hidden" id="delete-progress">
+		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+			<span class="sr-only">Loading...</span>
+		</div>
+</div> 
+     {{include('EMMUserBundle:User:messages/success.html.twig')}}
+     {{include('EMMUserBundle:User:messages/danger.html.twig')}}
+      
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="page-header margin-none">
+                    <h2 class="padding-none"> {% trans %}Users{% endtrans %}</h2>
+                </div>
+                <div class="table-responsive">
+                   <p>
+					{% trans %}Total records:{% endtrans %} <span id="total">{{ pagination.getTotalItemCount }}</span>
+                                  </p>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                 <th> {{knp_pagination_sortable(pagination,'Username'|trans,'u.username')}}</th>
+                                <th> {{knp_pagination_sortable(pagination,'First name'|trans,'u.firstName')}}</th>
+                                <th>{{knp_pagination_sortable(pagination,'Last name'|trans,'u.lstaName')}}</th>
+                                 
+                                <th>{{knp_pagination_sortable(pagination,'Email'|trans,'u.email')}}</th>
+                                 
+                                <th>
+
+                                    {{knp_pagination_sortable(pagination,'Role'|trans,'u.role')}}
+
+                                </th>
+                                <th>{{knp_pagination_sortable(pagination,'Created'|trans,'u.createdAt') }}</th>
+                                <th>{{knp_pagination_sortable(pagination,'Updated'|trans,'u.updatedAt')}}</th>
+                                <th>{{ 'Actions'|trans }}</th> 
+                            </tr>
+
+
+
+                        </thead>
+                        <tbody>
+                            {% for  user in pagination %}
+                                <tr data-id="{{user.id}}">
+                                    <td>{{user.userName}}</td> 
+                                    <td>{{user.firstName}}</td>
+                                    <td>{{user.lstaName}}</td>
+                                    <td>{{user.email}}</td>
+                                     
+                                    <td> {% if user.role=='ROLE_ADMIN' %}
+                                        <strong>
+                                           {% trans %} Administrator {% endtrans %}
+                                        </strong>
+                                        {% elseif user.role=='ROLE_USER' %}
+                                            <strong>
+                                            {% trans %}
+                                                
+                                                User
+                                                {% endtrans %}
+                                            </strong>
+                                            {% endif %}
+
+                                            </td>
+                                            <td>{{user.createdAt|date('d-m-y H:i')}}</td>
+                                            <td>{{user.updatedAt|date('d-m-y H:i')}}</td>
+                                            <td>
+                                                <a href="{{path('emm_user_view',{id:user.id})}}" class="btn btn-sm btn-info">{% trans %}View{% endtrans %}</a>
+                                                <a href="{{path('emm_user_edit',{id:user.id})}}" class="btn btn-sm btn-primary">{% trans %}Edit{% endtrans %}</a>
+                                                <a href="#" class="btn btn-sm btn-danger btn-delete">
+                                                    {{'Delete'|trans}}
+                                                  </a> {# btn-delete agregamos para trabajar con ajax #}
+                                            </td>
+
+                                        </tr>
+
+
+
+                                        {% endfor%} 
+
+                                        </tbody>  
+                                          </table>
+                                        {# display navigation #}
+                                        <div class="navigation">
+                                            {{knp_pagination_render(pagination)}}
+                                            </div
+                                            
+                                 
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+
+
+              {{include ('EMMUserBundle:User:forms/form.html.twig',{form:delete_form_ajax, message:'Are you sure ?'|trans,id:'form-delete',with_submit: false})}} 
+             {# formulario enviado desde nuestro controlador ,
+                                                                                                                                     usamos unfromulariopara elminar nuestro ususari 
+                                                                                                                      en index lo usamos es reutilzar el mismo formujlario#}
+                                                                                                                      {# en el id:.. ponemos ese nombre, enel with lo setemamos con ese valor#}
+ 
+                                {% endblock %}    
+                                    {% block javascripts %}{# lamamos a nuestro bloque java script es para usar ajax  , con paren llamamos a los archivo del la plantilla principal#}
+                                    {{parent()}}    
+                                    <script src="{{asset('public/js/delete-user.js')}}"></script>{# no corresonde a la ruta donde lo creamos osea en js, pero en nuestra vista si llama
+                                                                                                mos a un archivo lo tenemos que hacer directamente del directorio publico,sinfony crea
+                                                                                                enlaces  simbolico, y la replica dentro de la carpeta web si no aprece entonce
+                                                                                                php app/console assets:install --symlink el cual va acrear el enlace symbolico#}
+                                    
+                                    {% endblock %}

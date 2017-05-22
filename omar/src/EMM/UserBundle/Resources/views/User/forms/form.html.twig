@@ -1,0 +1,29 @@
+{{form_start(form,{'attr':{'id':id|default('form')}}   )}}       {#atrr y con eso vamos a poner los atributos como el id y podemos ponerle un valor por defecto eso es asi porque en el otro formulario no ponemos ningun
+                                                 id#}
+
+{{form_widget(form)}}
+
+{% if with_submit is not defined or with_submit ==true  %}
+<input type="button" value="{{'Delete user'|trans}}" class="btn btn-lg btn-block btn-danger" onclick="confirmDelete()"> {# hacemos esto porque en el formulario que vamos a 
+                                                                                                                        hacer no necesitamos boton porque ya lo tenemos en el index#}
+
+{% endif %}
+
+{{form_end(form)}}
+<script>
+    var message='{{message}}';
+    
+    function confirmDelete()
+    {
+        bootbox.confirm(message,function(result){  
+            if(result == true)
+            {
+                document.form.submit();
+            }
+            
+        });
+    }
+    
+    
+    
+</script>
